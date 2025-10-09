@@ -16,13 +16,13 @@ export default function Header() {
             <span className='font-bold text-xl text-orange-600'>Cartes de la nation</span>
         </div>
 
-        <div className='flex items-center gap-3'>
+        {/* <div className='flex items-center gap-3'>
             <span>Username |</span>
             <button className="gap-2 flex items-center text-white bg-orange-500 rounded-md px-5 py-2">
                 <Unplug className="w-4 h-4" />
                 Déconnexion
             </button>
-        </div>
+        </div> */}
         
     </div>
   )
