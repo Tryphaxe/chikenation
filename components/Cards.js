@@ -20,13 +20,21 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
         pixelRatio: 2,
       });
 
-      const fileName = nom_et_prenoms
-        .replace(/\s+/g, '-')
-        .replace(/[^a-zA-Z0-9-]/g, '');
+      // Convertir le dataURL en Blob
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
 
-      saveAs(dataUrl, `carte-${fileName}.png`);
+      const fileName = nom_et_prenoms
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/ç/g, 'c')
+        .replace(/[^a-zA-Z0-9_\- ]/g, '')
+        .replace(/\s+/g, '_')
+        .toLowerCase();
+
+      saveAs(blob, `carte-${fileName}.png`);
     } catch (err) {
-      console.error("Erreur lors de la génération de l'image:", err);
+      console.error("Erreur lors de la génération de l'image:", err?.message || err);
     }
   };
 
@@ -76,11 +84,12 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
             <img
               src={photoUrl}
               alt={nom_et_prenoms}
-              className="w-full h-full object-cover"
-              // onError={(e) => {
-              //   e.currentTarget.onerror = null;
-              //   e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-              // }}
+              crossOrigin="anonymous"
+              className="w-full h-full object-top object-cover"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+              }}
             />
           </div>
         </div>
