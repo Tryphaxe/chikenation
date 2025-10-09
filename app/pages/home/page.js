@@ -66,6 +66,16 @@ const Index = () => {
                 </div>
             </header>
 
+            {/* <img
+              src="https://lh3.googleusercontent.com/d/13aOMIRiY4X0SNJnKhna7rtwrX9qWQ0_O"
+              alt="{nom_et_prenoms}"
+              className="w-24 h-24 object-cover"
+              // onError={(e) => {
+              //   e.currentTarget.onerror = null;
+              //   e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+              // }}
+            /> */}
+
             <main className="container mx-auto px-4 py-12">
                 {cardsData.length === 0 ? (
                     <div className="max-w-2xl mx-auto">

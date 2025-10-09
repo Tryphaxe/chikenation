@@ -77,10 +77,10 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
               src={photoUrl}
               alt={nom_et_prenoms}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-              }}
+              // onError={(e) => {
+              //   e.currentTarget.onerror = null;
+              //   e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+              // }}
             />
           </div>
         </div>
