@@ -7,6 +7,7 @@ import { Download, Loader2 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
+import toast from 'react-hot-toast';
 
 const Index = () => {
     const [cardsData, setCardsData] = useState([]);
@@ -20,9 +21,10 @@ const Index = () => {
 
     const handleDownloadAll = async () => {
         if (cardRefs.current.length === 0 || cardRefs.current.some(ref => !ref)) {
-            alert("Les cartes ne sont pas encore prêtes. Veuillez patienter.");
+            toast("Les cartes ne sont pas encore prête. Veuillez patienter SVP !!!", {icon: '✋'})
             return;
         }
+        const toastId = toast.loading("Téléchargement en cours...");
 
         setIsDownloading(true);
         const zip = new JSZip();
@@ -35,19 +37,27 @@ const Index = () => {
                 const dataUrl = await toPng(cardRef, { cacheBust: true, pixelRatio: 2 });
                 const response = await fetch(dataUrl);
                 const blob = await response.blob();
+                const cleanName = cardsData[i].nom_et_prenoms
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/ç/g, 'c')
+                    .replace(/[^a-zA-Z0-9_\- ]/g, '')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
 
-                const cleanName = cardsData[i].nom_et_prenoms.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
-                const fileName = `carte-${cleanName}.png`;
+                const fileName = `carte-de-la-nation-${cleanName}.png`;
                 zip.file(fileName, blob);
             }
 
-            const zipBlob = await zip.generateAsync({ type: 'blob' });
-            saveAs(zipBlob, 'cartes-personnalisees.zip');
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
 
-            alert(`${cardsData.length} carte(s) téléchargée(s) avec succès.`);
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            saveAs(zipBlob, `cartes-de-la-nation-${formattedDate}.zip`);
+
+            toast.success(`${cardsData.length} carte(s) téléchargée(s) avec succès.`, {id: toastId});
         } catch (error) {
-            console.error('Erreur lors du téléchargement:', error);
-            alert("Une erreur est survenue lors du téléchargement des cartes.");
+            toast.error("Une erreur est survenue lors du téléchargement des cartes.", {id: toastId});
         } finally {
             setIsDownloading(false);
         }

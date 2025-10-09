@@ -5,6 +5,7 @@ import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { Download } from 'lucide-react';
 import FileConversion from './FileConversion';
+import toast from 'react-hot-toast';
 
 const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
   const internalRef = useRef(null);
@@ -13,6 +14,7 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
   const handleDownload = async () => {
     const cardElement = ref?.current || internalRef.current;
     if (!cardElement) return;
+    const toastId = toast.loading("Téléchargement en cours...");
 
     try {
       const dataUrl = await toPng(cardElement, {
@@ -32,9 +34,10 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
         .replace(/\s+/g, '_')
         .toLowerCase();
 
-      saveAs(blob, `carte-${fileName}.png`);
+      saveAs(blob, `carte-de-la-nation-${fileName}.png`);
+      toast.success("Téléchargement terminé !", {id: toastId});
     } catch (err) {
-      console.error("Erreur lors de la génération de l'image:", err?.message || err);
+      toast.error("Erreur lors de la génération de l'image:", err?.message || err, {id: toastId});
     }
   };
 
@@ -66,7 +69,7 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
         {/* Nom et prénoms */}
         <div className="absolute left-12 top-[165px]">
           <h2 className="text-xl font-bold uppercase text-gray-800 text-left">
-            {nom_et_prenoms}
+            {nom_et_prenoms.split(" ").slice(0, 3).join(" ")}
           </h2>
         </div>
 
