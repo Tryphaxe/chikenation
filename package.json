@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
+    "bcryptjs": "^3.0.2",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.13",
     "jszip": "^3.10.1",
