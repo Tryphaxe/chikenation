@@ -9,14 +9,26 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import toast from 'react-hot-toast';
 import ProtectedRoute from '@/context/ProtectedRoute';
+import { createCards } from '@/components/CreateCards';
 
 const Index = () => {
     const [cardsData, setCardsData] = useState([]);
     const [isDownloading, setIsDownloading] = useState(false);
     const cardRefs = useRef([]);
 
-    const handleDataLoaded = (data) => {
-        setCardsData(data);
+    const handleDataLoaded = async (data) => {
+        // Ajouter la colonne full_code depuis Supabase
+        const preparedData = data.map(d => ({
+            code: d.code,
+            restau: d.restau,
+            nom_et_prenoms: d.nom_et_prenoms,
+            surnom: d.surnom,
+            photo: d.photo,
+        }));
+
+        const cardsWithCodes = await createCards(preparedData);
+
+        setCardsData(cardsWithCodes);
         cardRefs.current = [];
     };
 
@@ -144,7 +156,7 @@ const Index = () => {
                                     <Cards
                                         key={index}
                                         ref={(el) => (cardRefs.current[index] = el)}
-                                        code={card.code}
+                                        full_code={card.full_code}
                                         nom_et_prenoms={card.nom_et_prenoms}
                                         surnom={card.surnom}
                                         photo={card.photo}

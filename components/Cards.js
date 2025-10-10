@@ -7,7 +7,7 @@ import { Download } from 'lucide-react';
 import FileConversion from './FileConversion';
 import toast from 'react-hot-toast';
 
-const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
+const Cards = forwardRef(({ full_code, nom_et_prenoms, surnom, photo }, ref) => {
   const internalRef = useRef(null);
   const photoUrl = FileConversion(photo);
 
@@ -37,7 +37,7 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
       saveAs(blob, `carte-de-la-nation-${fileName}.png`);
       toast.success("Téléchargement terminé !", {id: toastId});
     } catch (err) {
-      toast.error("Erreur lors de la génération de l'image:", err?.message || err, {id: toastId});
+      toast.error(`Erreur lors de la génération de l'image : ${err?.message || err}`, { id: toastId });
     }
   };
 
@@ -62,7 +62,7 @@ const Cards = forwardRef(({ code, nom_et_prenoms, surnom, photo }, ref) => {
         {/* code */}
         <div className="absolute top-[115px] right-[80px]">
           <p className="text-sm font-bold italic text-white tracking-wider text-right">
-            {code}
+            {full_code}
           </p>
         </div>
 
