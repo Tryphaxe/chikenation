@@ -9,26 +9,14 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import toast from 'react-hot-toast';
 import ProtectedRoute from '@/context/ProtectedRoute';
-import { createCards } from '@/components/CreateCards';
 
 const Index = () => {
     const [cardsData, setCardsData] = useState([]);
     const [isDownloading, setIsDownloading] = useState(false);
     const cardRefs = useRef([]);
 
-    const handleDataLoaded = async (data) => {
-        // Ajouter la colonne full_code depuis Supabase
-        const preparedData = data.map(d => ({
-            code: d.code,
-            restau: d.restau,
-            nom_et_prenoms: d.nom_et_prenoms,
-            surnom: d.surnom,
-            photo: d.photo,
-        }));
-
-        const cardsWithCodes = await createCards(preparedData);
-
-        setCardsData(cardsWithCodes);
+    const handleDataLoaded = (data) => {
+        setCardsData(data);
         cardRefs.current = [];
     };
 
@@ -90,16 +78,6 @@ const Index = () => {
                     </div>
                 </header>
 
-                {/* <img
-              src="https://lh3.googleusercontent.com/d/13aOMIRiY4X0SNJnKhna7rtwrX9qWQ0_O"
-              alt="{nom_et_prenoms}"
-              className="w-24 h-24 object-cover"
-              // onError={(e) => {
-              //   e.currentTarget.onerror = null;
-              //   e.currentTarget.src = 'https://images.unsplash.com/photo-1750535135451-7c20e24b60c1?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-              // }}
-            /> */}
-
                 <main className="container mx-auto px-4 py-12">
                     {cardsData.length === 0 ? (
                         <div className="max-w-2xl mx-auto">
@@ -156,7 +134,9 @@ const Index = () => {
                                     <Cards
                                         key={index}
                                         ref={(el) => (cardRefs.current[index] = el)}
-                                        full_code={card.full_code}
+                                        code={card.code}
+                                        restau={card.restau}
+                                        num_aleat={card.num_aleat}
                                         nom_et_prenoms={card.nom_et_prenoms}
                                         surnom={card.surnom}
                                         photo={card.photo}
