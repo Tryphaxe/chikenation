@@ -5,9 +5,21 @@ import { Home, Power, Unplug, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link';
 import React from 'react'
+import toast from 'react-hot-toast';
 
 export default function Header() {
     const { user, logout, isAdmin } = useAuth();
+
+    const handleLogout = async () => {
+        const toastId = toast.loading('Déconnexion en cours...');
+        try {
+            await logout();
+            toast.success('Déconnecté avec succès ✅', { id: toastId });
+        } catch (error) {
+            toast.error('Erreur lors de la déconnexion ❌', { id: toastId });
+            console.error(error);
+        }
+    };
 
 
     return (
@@ -33,7 +45,7 @@ export default function Header() {
                     </Link>
                 )}
                 <span className='px-4 py-2 bg-amber-100 rounded-3xl'>{user ? user.username : ""}</span>
-                <button onClick={logout} className="gap-2 flex items-center text-white bg-orange-500 rounded-full p-2">
+                <button onClick={handleLogout} className="cursor-pointer gap-2 flex items-center text-white bg-orange-500 rounded-full p-2">
                     <Power className="w-4 h-4" />
                 </button>
             </div>

@@ -12,14 +12,14 @@ export async function POST(req) {
     .limit(1);
 
   if (error || users.length === 0) {
-    return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 });
+    return NextResponse.json({ error: 'Utilisateur non trouvé.' }, { status: 404 });
   }
 
   const user = users[0];
   const isValid = await bcrypt.compare(password, user.password);
 
   if (!isValid) {
-    return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 });
+    return NextResponse.json({ error: 'Mot de passe incorrect.' }, { status: 401 });
   }
 
   // Retourne les infos utiles

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -12,23 +13,29 @@ export default function LoginPage() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-		setLoading(true);
+        setLoading(true);
 
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            body: JSON.stringify({ username, password }),
-            headers: { 'Content-Type': 'application/json' },
-        });
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
 
-        if (res.ok) {
             const user = await res.json();
-            localStorage.setItem('user', JSON.stringify(user));
-            router.push('/pages/home');
-        } else {
-            const { error } = await res.json();
-            toast.error('Échec de la connexion.', error);
+
+            if (res.ok) {
+                localStorage.setItem('user', JSON.stringify(user));
+                toast.success('Connexion réussie 🎉');
+                router.push('/pages/home');
+            } else {
+                toast.error(data.error || 'Nom d’utilisateur ou mot de passe incorrect');
+            }
+        } catch (err) {
+            toast.error('Erreur de connexion au serveur.');
+        } finally {
+            setLoading(false);
         }
-		setLoading(false);
     };
 
     return (
@@ -48,7 +55,7 @@ export default function LoginPage() {
                     value={username} onChange={e => setUsername(e.target.value)} />
                 <input placeholder="Mot de passe" type="password" className="border border-gray-200 rounded-md p-2 w-full mb-2"
                     value={password} onChange={e => setPassword(e.target.value)} />
-                <button className="bg-orange-600 text-white p-2 w-full rounded-xl mt-3 flex items-center justify-center gap-2">
+                <button className="cursor-pointer bg-orange-600 text-white p-2 w-full rounded-xl mt-3 flex items-center justify-center gap-2">
                     {loading ? (
 						<>
 							<Loader2 className="h-4 w-4 animate-spin" />
